@@ -4,6 +4,8 @@
 library(tidyverse)
 library(stringr)
 library(ggwordcloud) # Carregar o novo pacote
+library(treemapify)
+library(wordcloud2)
 
 
 dados_curitiba <- read_csv("Dados_curitiba.csv", locale = locale(encoding = "UTF-8"))
@@ -79,7 +81,7 @@ ggplot(
 # =================================================================
 # PASSO 5: AGREGAR VOTOS POR PARTIDO
 # =================================================================
-library(treemapify) # Carregar o pacote para o gráfico
+ # Carregar o pacote para o gráfico
 
 votos_por_partido <- votos_vereadores %>%
   # Garantir que temos siglas válidas para agrupar
@@ -124,3 +126,34 @@ ggplot(
     subtitle = "Curitiba - O tamanho de cada área é proporcional ao total de votos do partido",
     caption = "Fonte: Dados do TSE"
   )
+
+
+# Você precisará agregar seus dados por partido e por zona
+dados_heatmap <- dados_curitiba %>%
+  filter(DS_CARGO_PERGUNTA == "Vereador") %>%
+  group_by(NM_PARTIDO, NR_ZONA) %>%
+  summarise(votos = sum(QT_VOTOS)) %>%
+  group_by(NR_ZONA) %>%
+  mutate(percentual_votos = (votos / sum(votos)) * 100)
+
+# Use os mesmos 'dados_heatmap' da alternativa anterior
+ggplot(dados_heatmap, aes(x = as.factor(NR_ZONA), y = votos)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  facet_wrap(~ NM_PARTIDO, ncol = 3) + # Magia acontece aqui!
+  labs(title = "Distribuição de Votos por Zona para Cada Partido",
+       x = "Zona Eleitoral", y = "Total de Votos") +
+  theme_bw()
+
+# O seu código original para criar o gráfico
+ggplot(dados_heatmap, aes(x = as.factor(NR_ZONA), y = NM_PARTIDO, fill = percentual_votos)) +
+  geom_tile(color = "white") + # geom_tile cria o heatmap
+  
+  # --- SUBSTITUA A LINHA DE COR ANTIGA POR ESTA ---
+  # Define a escala de cores indo de branco, para amarelo, para preto
+  scale_fill_gradientn(colors = c("yellow", "black")) +
+  
+  labs(title = "Concentração de Votos por Partido e Zona Eleitoral",
+       x = "Zona Eleitoral", y = "Partido", fill = "% de Votos na Zona") +
+  theme_minimal()
+
+
