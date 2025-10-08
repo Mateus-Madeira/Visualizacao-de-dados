@@ -184,4 +184,3 @@ dados_vereador %>%
   scale_fill_gradient(low = "#5b8700", high = "#0038d7") +
   theme_minimal() +
   theme(plot.background = element_rect(fill = "#a6b8eb", color = NA))
-
