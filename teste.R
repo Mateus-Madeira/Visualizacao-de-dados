@@ -21,6 +21,12 @@ showtext_auto()
 # --- Dados ---
 dados_curitiba <- read_csv("https://raw.githubusercontent.com/Mateus-Madeira/Visualizacao-de-dados/main/Dados_curitiba.csv",
                            locale = locale(encoding = "UTF-8"))
+
+dados_vereador <- dados_curitiba %>%
+  filter(DS_CARGO_PERGUNTA == "Vereador")
+dados_prefeito <- dados_curitiba %>%
+  filter(DS_CARGO_PERGUNTA == "Prefeito")
+
 dados_secao <- dados_vereador %>%
   group_by(NR_ZONA, NR_SECAO) %>%
   summarise(comparecimento=first(QT_COMPARECIMENTO),
@@ -30,6 +36,7 @@ dados_secao <- dados_vereador %>%
 prop_geral <- sum(dados_secao$comparecimento) / 
   (sum(dados_secao$comparecimento) + sum(dados_secao$abstencao))
 
+zonas <- unique(dados_secao$NR_ZONA)
 # --- Gráfico geral ---
 p_geral <- dados_secao %>%
   summarise(comparecimento=sum(comparecimento), abstencao=sum(abstencao)) %>%
@@ -188,3 +195,4 @@ dados_vereador %>%
   scale_fill_gradient(low = "#5b8700", high = "#0038d7") +
   theme_minimal() +
   theme(plot.background = element_rect(fill = "#a6b8eb", color = NA))
+
