@@ -8,11 +8,15 @@ library(patchwork)
 library(purrr)
 library(circlize)
 library(showtext)
-
+library(sysfonts)
 # --- Fonte e cores ---
 paleta_cores <- list(preto="#000000", amarelo="#FFDD00", verde="#8DC63F", roxo="#92278F", vermelho="#ED1C24")
+
 font_url <- "https://raw.githubusercontent.com/Mateus-Madeira/Visualizacao-de-dados/main/Axiforma-Black.ttf"
-font_add(family = "Axiforma", regular = font_url)
+font_file <- tempfile(fileext = ".ttf")
+download.file(font_url, destfile = font_file, mode = "wb")
+font_add(family = "Axiforma", regular = font_file)
+showtext_auto()
 
 # --- Dados ---
 dados_curitiba <- read_csv("https://raw.githubusercontent.com/Mateus-Madeira/Visualizacao-de-dados/main/Dados_curitiba.csv",
@@ -133,7 +137,7 @@ SG_PARTIDO_SIGLA = c( "PSD", "PMB", "PSB", "UNIÃO", "SOLIDARIEDADE", "REPUBLICA
                       "PRTB", "CIDADANIA", "DC", "PSTU", "PCO" )
 votos_filtrados <- votos_candidatos[
   !votos_candidatos$NM_VOTAVEL %in% SG_PARTIDO_SIGLA, 
-  ]
+]
 wordcloud2(
   votos_filtrados[, c("NM_VOTAVEL", "total_votos")],
   size = 0.2, 
