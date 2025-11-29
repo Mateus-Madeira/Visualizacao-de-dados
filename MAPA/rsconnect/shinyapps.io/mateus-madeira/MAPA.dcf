@@ -1,0 +1,12 @@
+name: MAPA
+title: MAPA
+username: mateus-madeira
+account: mateus-madeira
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16194178
+bundleId: 11249109
+url: https://mateus-madeira.shinyapps.io/MAPA/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
